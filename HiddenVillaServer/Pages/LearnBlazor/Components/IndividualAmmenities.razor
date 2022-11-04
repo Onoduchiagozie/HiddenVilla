@@ -1,0 +1,21 @@
+﻿@using HiddenVillaServer.Model
+
+<div class="bg-light border p-2 col-5 offset-1" @onclick="(args)=>chosenamenities(args,amen.Name)">
+    <h4 class="text-secondary">
+        Ammenities - @amen.Id
+    </h4>
+    @amen.Name <br />
+    @amen.Description <br />
+   </div>
+
+@code {
+    [Parameter]
+    public HotelAmmenities amen { get; set; }
+
+    [Parameter]
+    public EventCallback<string> onAmenity{ get; set; }
+
+    protected async Task chosenamenities(MouseEventArgs e, string Name){
+        await onAmenity.InvokeAsync((string)Name);
+    }
+}
