@@ -20,6 +20,41 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Sotsera.Blazor.Toaster" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\0b6f3692-a727-4f9c-915b-c6958d42c86b.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\0f634554-d3b3-4305-aa34-4615c313f6b5.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\1f4a7b97-5df0-469b-9d8e-72a000dce02d.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\21b771c3-9eae-4463-9723-30a25e8c95f0.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\279cb85f-8f1c-4516-99f1-a384558726b4.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\28e68c39-405f-4312-9a70-27f593c139c2.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\427be46b-1dc3-4f4f-ac1d-71e006e32e88.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\572037b2-c799-4751-bb94-5a6769b2891e.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\59067742-9828-4391-96fc-b342003e46cd.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\5c8ece97-d2e9-491c-a921-c36fdbc45142.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\61291e5d-ed5f-451e-82d7-dc9889cf1dc2.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\70652e56-0749-4a16-ab7f-7ffcb572ffbc.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\7601d03b-b6ea-4dd4-884f-3fb5d15da15c.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\788d6415-0647-4131-b623-5de3fbbf27b2.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\82113ab4-db05-46d9-af7e-639e7136ece8.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\86e235b4-ddbd-43cb-b6d7-20e861a24ea8.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\89d8cf2e-1169-4da4-920e-a7bcb3a1dea2.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\89ef1cd5-eeb9-46de-8c24-85e780b2a21a.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\9cbd811b-27ef-4908-bc17-0e7683626baf.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\a30275c9-3a66-4c47-88c6-90e045adf66e.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\a523f6a4-c532-418d-8d5f-2edfa5337e16.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\ac5a67bb-7417-4153-951c-4cf699ebb5ea.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\b22390ae-4687-49f5-9ef6-358be2702cda.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\b985038a-f830-4477-8efc-76aab9f3e811.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\bbc2e473-4565-40f8-8d64-c2d8a48aeebb.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\d5ff39f8-aca6-4918-97db-868519466751.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\de1315d5-202d-4928-a034-7c8ae42ee7d6.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\e0b6452d-ffc5-49c7-9190-3009a01f39f7.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\ea217588-a5ce-4629-97d9-d64c0ffd3efa.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\ee49d783-d516-4506-9298-23d258a45cd7.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\RoomImages\f9c4a66d-2d46-44f4-b36c-60a51d6bf6f2.jpg" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using HiddenVillaServer.Model.MetaData;
 
 namespace HiddenVillaServer.Model
 {
@@ -14,6 +15,9 @@ namespace HiddenVillaServer.Model
         public double RegularRate { get; set; }
         public string Details { get; set; }
         public string SqFt { get; set; }
+        
+        public virtual ICollection<HotelImage> HotelImages { get; set; }
+        public List<string> ImageUrls { get; set; }
        
     }
 }

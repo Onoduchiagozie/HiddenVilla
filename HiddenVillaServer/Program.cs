@@ -1,22 +1,34 @@
 using HiddenVillaServer.Data;
 using HiddenVillaServer.Data.Repository;
 using HiddenVillaServer.Data.Repository.IRepository;
+using HiddenVillaServer.Service;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
+using Sotsera.Blazor.Toaster.Core.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddDbContext<VillaDbContext>(options =>
                         options.UseSqlServer(builder.Configuration
                         .GetConnectionString("DefaultConnection"))
                         );
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IHotelRoomRepo,HotelRoomRepo>();
+builder.Services.AddScoped<IHotelImagesRepository,HotelImagesRepository>();
+builder.Services.AddScoped<IFileUpload,FileUpload>();
+builder.Services.AddToaster(config =>
+{
+    //example customizations
+    config.PositionClass = Defaults.Classes.Position.TopRight;
+    config.PreventDuplicates = true;
+    config.NewestOnTop = false;
+});
+//builder.Services.AddToastr(new ToastrOptions { closeButton = true, hideDuration = 3000 });
+
 
 var app = builder.Build();
 

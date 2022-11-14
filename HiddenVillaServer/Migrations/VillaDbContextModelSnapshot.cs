@@ -66,6 +66,39 @@ namespace HiddenVillaServer.Migrations
 
                     b.ToTable("HotelRooms");
                 });
+
+            modelBuilder.Entity("HiddenVillaServer.Model.MetaData.HotelImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("HotelImages");
+                });
+
+            modelBuilder.Entity("HiddenVillaServer.Model.MetaData.HotelImage", b =>
+                {
+                    b.HasOne("HiddenVillaServer.Model.HotelRoom", "HotelRoom")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HotelRoom");
+                });
 #pragma warning restore 612, 618
         }
     }

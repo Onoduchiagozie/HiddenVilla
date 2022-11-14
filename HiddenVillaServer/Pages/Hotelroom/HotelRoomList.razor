@@ -1,7 +1,11 @@
 ﻿@using Model
+
 @using HiddenVillaServer.Data.Repository.IRepository
+@inject HiddenVillaServer.Service.IFileUpload fileupload
 @inject IHotelRoomRepo hotelRepo
 @page "/hotel-room"
+<DeleteConfirmation/>
+
 <div class="row mt-4">
     <div class="col-8">
         <h4 class="card-title text-info">
@@ -18,47 +22,78 @@
     <div class="col-12">
         <table class="table table-bordered table-hover">
             <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Occupancy</th>
-                    <th>Rate</th>
-                    <th>SqFt</th>
-                    <th>
+            <tr>
+                <th>Name</th>
+                <th>Occupancy</th>
+                <th>Rate</th>
+                <th>SqFt</th>
+                <th>
+                    <DeleteConfirmation></DeleteConfirmation>
 
-                    </th>
+                </th>
                  
-                </tr>
+            </tr>
             </thead>
             <tbody>
-                @if(HotelRooms.Any())
-                {
-                    foreach (var room in HotelRooms)
-                    {
-                        <tr>
-                            <td>@room.Name</td>
-                            <td>@room.Occupancy</td>
-                            <td>@room.RegularRate.ToString("c")</td>
-                            <td>@room.SqFt</td>
-                            <td></td>
-                        </tr>
-                    }
-                }
-                else
+            @if(HotelRooms.Any())
+            {
+                foreach (var room in HotelRooms)
                 {
                     <tr>
-                        <td colspan="5">
-                            No Rooms Yet
+                        <td>@room.Name</td>
+                        <td>@room.Occupancy</td>
+                        <td>@room.RegularRate.ToString("c")</td>
+                        <td>@room.SqFt</td>
+                        <td>
+                            <NavLink href="@($"hotel-room/edit/{room.Id}")" 
+                                     class="btn btn-primary">Edit</NavLink>
+                            <button class="btn btn-danger" @onclick=" () => HandleDelete(room.Id)">Delete</button>
                         </td>
                     </tr>
+                       
                 }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">
+                        No Rooms Yet
+                    </td>
+                </tr>
+            }
             </tbody>
         </table>
     </div>
 </div>
+
+<DeleteConfirmation/>
 @code {
+    
     private IEnumerable<HotelRoomDTO> HotelRooms { get; set; } = new List<HotelRoomDTO>();
+    [Inject] 
+    protected Sotsera.Blazor.Toaster.IToaster toast { get; set; }
+
+    public int? DeleteRoomId { get; set; }
+    
     protected override async Task OnInitializedAsync()
     {
         HotelRooms = await hotelRepo.GetAllHotelRooms();
     }
+
+    private async Task HandleDelete(int roomId)
+    {
+        HotelRoomDTO hotelRoomDto = await hotelRepo.GetHotelRoom(roomId);
+        foreach (var image in hotelRoomDto.HotelImages)
+        {
+            var imageName = image.ImageUrl.Replace($"RoomImages/", "");
+            
+            fileupload.DeleteFile(imageName);
+
+        }
+        
+        await hotelRepo.DeleteHotel(roomId);
+        toast.Info("Hotel Room Deleted Successfully","Deleted");
+        HotelRooms = await hotelRepo.GetAllHotelRooms();
+    }
+
 }

@@ -28,12 +28,15 @@ namespace HiddenVillaServer.Data.Repository
             return _mapper.Map<HotelRoom,HotelRoomDTO>(addedRoom.Entity);
 
         }
-
+        
         public async Task<int> DeleteHotel(int roomId)
         {
             var roomDetails = await _db.HotelRooms.FindAsync(roomId);
             if (roomDetails != null)
             {
+                var allimages = await _db.HotelImages.Where(x => x.RoomId == roomId).ToListAsync();
+                _db.HotelImages.RemoveRange(allimages);
+                
                 _db.HotelRooms.Remove(roomDetails);
                 return await _db.SaveChangesAsync();
             }
@@ -49,7 +52,9 @@ namespace HiddenVillaServer.Data.Repository
             try
             {
                 IEnumerable<HotelRoomDTO> hotelRoomDTOs =
-                    _mapper.Map<IEnumerable<HotelRoom>, IEnumerable<HotelRoomDTO>>(_db.HotelRooms);
+                    _mapper.Map<IEnumerable<HotelRoom>, IEnumerable<HotelRoomDTO>>(
+                        _db.HotelRooms.Include(x=>x.HotelImages)
+                        );
                 return hotelRoomDTOs;
                     
             }
@@ -63,7 +68,9 @@ namespace HiddenVillaServer.Data.Repository
         {
             try
             {
-                HotelRoomDTO hotelRoom= _mapper.Map<HotelRoom,HotelRoomDTO>( await _db.HotelRooms.FirstOrDefaultAsync(x => x.Id == roomId));
+                HotelRoomDTO hotelRoom= _mapper.Map<HotelRoom,HotelRoomDTO>(await _db.HotelRooms.Include(x=>x.HotelImages)
+                        .FirstOrDefaultAsync(x => x.Id == roomId)
+                    );
                 return hotelRoom;
 
             }
@@ -74,14 +81,26 @@ namespace HiddenVillaServer.Data.Repository
 
         }
 
-        public async Task<HotelRoomDTO> IsRoomUnique(string hotelname)
+        public async Task<HotelRoomDTO> IsRoomUnique(string hotelname,int roomId=0)
         {
             try
             {
-                HotelRoomDTO hotelRoom = _mapper.Map<HotelRoom, HotelRoomDTO>(
-                    await _db.HotelRooms.FirstOrDefaultAsync(x => x.Name == hotelname)
+                if (roomId == 0)
+                {
+                    HotelRoomDTO hotelRoom = _mapper.Map<HotelRoom, HotelRoomDTO>(
+                        await _db.HotelRooms.FirstOrDefaultAsync(x => x.Name.ToLower() == hotelname.ToLower())
                     );
-                return hotelRoom;
+                    return hotelRoom;
+                }
+                else
+                {
+                    HotelRoomDTO hotelRoom = _mapper.Map<HotelRoom, HotelRoomDTO>(
+                        await _db.HotelRooms.FirstOrDefaultAsync(x =>
+                            x.Name.ToLower() == hotelname.ToLower()
+                            && x.Id != roomId)
+                    );
+                    return hotelRoom;
+                }
 
             }
             catch (Exception ex)
