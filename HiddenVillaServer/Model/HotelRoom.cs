@@ -20,6 +20,5 @@ namespace HiddenVillaServer.Model
         public string UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; }
         public virtual ICollection<HotelImage> HotelImages { get; set; }
-        
     }
 }

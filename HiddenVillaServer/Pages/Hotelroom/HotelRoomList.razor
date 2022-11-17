@@ -1,5 +1,5 @@
 ﻿@using Model
-
+@inject NavigationManager navigationManager
 @using HiddenVillaServer.Data.Repository.IRepository
 @inject HiddenVillaServer.Service.IFileUpload fileupload
 @inject IHotelRoomRepo hotelRepo
@@ -85,7 +85,7 @@
         HotelRoomDTO hotelRoomDto = await hotelRepo.GetHotelRoom(roomId);
         foreach (var image in hotelRoomDto.HotelImages)
         {
-            var imageName = image.ImageUrl.Replace($"RoomImages/", "");
+            var imageName = image.ImageUrl.Replace($"{navigationManager.BaseUri}RoomImages/", "");
             
             fileupload.DeleteFile(imageName);
 

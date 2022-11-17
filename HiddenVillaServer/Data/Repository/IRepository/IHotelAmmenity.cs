@@ -1,15 +1,17 @@
-﻿using HiddenVillaServer.Model;
+﻿
+using HiddenVillaServer.Model;
 
 namespace HiddenVillaServer.Data.Repository.IRepository
 {
-    public interface IHotelRoomRepo
+    public interface IHotelAmenity
     {
-        public Task<HotelRoomDTO>  CreateHotelRoom(HotelRoomDTO hotelRoomDTO);
-        public Task<HotelRoomDTO> UpdateHotelRoom(int roomId, HotelRoomDTO hotelRoomDTO);
-        public Task<HotelRoomDTO>  GetHotelRoom(int roomId);
-        public Task<IEnumerable<HotelRoomDTO>>  GetAllHotelRooms();
-        public Task<HotelRoomDTO> IsRoomUnique(string hotelname,int roomId=0);
-        public Task<int> DeleteHotel(int roomId);
+        public Task<HotelAmenity> CreateHotelAmenity(HotelAmenity hotelAmenity);
+        public Task<HotelAmenity> UpdateHotelAmenity(HotelAmenity hotelAmenity);
+        public Task<int> DeleteHotelAmenity(int amenityId);
+        public Task<IEnumerable<HotelAmenity>> GetAllHotelAmenity();
+        public Task<HotelAmenity> GetHotelAmenity(int amenityId);
+        public Task<HotelAmenity> IsSameNameAmenityAlreadyExists(string name);
+        
 
     }
 }

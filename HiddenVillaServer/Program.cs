@@ -1,11 +1,13 @@
 using HiddenVillaServer.Data;
 using HiddenVillaServer.Data.Repository;
 using HiddenVillaServer.Data.Repository.IRepository;
+using HiddenVillaServer.Model;
 using HiddenVillaServer.Service;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using Sotsera.Blazor.Toaster.Core.Models;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +18,13 @@ builder.Services.AddDbContext<VillaDbContext>(options =>
                         options.UseSqlServer(builder.Configuration
                         .GetConnectionString("DefaultConnection"))
                         );
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<VillaDbContext>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IHotelRoomRepo,HotelRoomRepo>();
 builder.Services.AddScoped<IHotelImagesRepository,HotelImagesRepository>();
+builder.Services.AddScoped<IHotelAmenity,HotelAmenityRepository>();
 builder.Services.AddScoped<IFileUpload,FileUpload>();
 builder.Services.AddToaster(config =>
 {
@@ -27,6 +33,8 @@ builder.Services.AddToaster(config =>
     config.PreventDuplicates = true;
     config.NewestOnTop = false;
 });
+
+builder.Services.AddHttpContextAccessor();
 //builder.Services.AddToastr(new ToastrOptions { closeButton = true, hideDuration = 3000 });
 
 
@@ -40,12 +48,15 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
-
 app.UseRouting();
-
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapRazorPages();    
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 

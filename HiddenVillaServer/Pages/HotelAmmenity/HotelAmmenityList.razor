@@ -1,20 +1,15 @@
-﻿@using Model
-@inject NavigationManager navigationManager
-@using HiddenVillaServer.Data.Repository.IRepository
-@inject HiddenVillaServer.Service.IFileUpload fileupload
-@inject IHotelRoomRepo hotelRepo
-@page "/hotel-room"
-<DeleteConfirmation/>
-
+﻿@page "/hotel-amenity"
+@inject IHotelAmenity _Amenity
+<ToastContainer/>
 <div class="row mt-4">
     <div class="col-8">
         <h4 class="card-title text-info">
-            Hotel Rooms
+            Hotel Amenity
         </h4>
        </div>
        <div class="col-3 offset-1">
-           <NavLink href="hotel-room/create" class="btn btn-info form-control">
-                Add New Room 
+           <NavLink href="hotel-amenity/create" class="btn btn-info form-control">
+                Add Amenity
            </NavLink>
        </div>
 </div>
@@ -24,30 +19,28 @@
             <thead>
             <tr>
                 <th>Name</th>
-                <th>Occupancy</th>
+                <th>Timing</th>
                 <th>Rate</th>
                 <th>SqFt</th>
                 <th>
-                    <DeleteConfirmation></DeleteConfirmation>
 
                 </th>
                  
             </tr>
             </thead>
             <tbody>
-            @if(HotelRooms.Any())
+            @if(HotelAmenities.Any())
             {
-                foreach (var room in HotelRooms)
+                foreach (var item in HotelAmenities)
                 {
                     <tr>
-                        <td>@room.Name</td>
-                        <td>@room.Occupancy</td>
-                        <td>@room.RegularRate.ToString("c")</td>
-                        <td>@room.SqFt</td>
+                        <td>@item.Name</td>
+                        <td>@item.Timing</td>
+                        <td>@item.Icon</td>
                         <td>
-                            <NavLink href="@($"hotel-room/edit/{room.Id}")" 
+                            <NavLink href="@($"hotel-amenity/edit/{item.Id}")" 
                                      class="btn btn-primary">Edit</NavLink>
-                            <button class="btn btn-danger" @onclick=" () => HandleDelete(room.Id)">Delete</button>
+                            <button class="btn btn-danger" @onclick=" () => HandleDelete(item.Id)">Delete</button>
                         </td>
                     </tr>
                        
@@ -57,7 +50,7 @@
             {
                 <tr>
                     <td colspan="5">
-                        No Rooms Yet
+                        No Amenities Yet
                     </td>
                 </tr>
             }
@@ -66,34 +59,24 @@
     </div>
 </div>
 
-<DeleteConfirmation/>
 @code {
-    
-    private IEnumerable<HotelRoomDTO> HotelRooms { get; set; } = new List<HotelRoomDTO>();
+
+    internal IEnumerable<HotelAmenity> HotelAmenities { get; set; } = new List<HotelAmenity>();
     [Inject] 
     protected Sotsera.Blazor.Toaster.IToaster toast { get; set; }
-
-    public int? DeleteRoomId { get; set; }
+    
     
     protected override async Task OnInitializedAsync()
     {
-        HotelRooms = await hotelRepo.GetAllHotelRooms();
+        HotelAmenities = await _Amenity.GetAllHotelAmenity();
+        
     }
 
-    private async Task HandleDelete(int roomId)
+    private async Task HandleDelete(int amenityId)
     {
-        HotelRoomDTO hotelRoomDto = await hotelRepo.GetHotelRoom(roomId);
-        foreach (var image in hotelRoomDto.HotelImages)
-        {
-            var imageName = image.ImageUrl.Replace($"{navigationManager.BaseUri}RoomImages/", "");
-            
-            fileupload.DeleteFile(imageName);
-
-        }
-        
-        await hotelRepo.DeleteHotel(roomId);
-        toast.Info("Hotel Room Deleted Successfully","Deleted");
-        HotelRooms = await hotelRepo.GetAllHotelRooms();
+        await _Amenity.DeleteHotelAmenity(amenityId);
+        toast.Info("Hotel Amenity Deleted Successfully","Deleted");
+        HotelAmenities = await _Amenity.GetAllHotelAmenity();
     }
 
 }

@@ -1,13 +1,15 @@
 ﻿@page "/hotel-room/create"
 @page "/hotel-room/edit/{Id:int}"
 @using Model
+@inject NavigationManager navigationManager
+
 @using HiddenVillaServer.Data.Repository.IRepository
 @using HiddenVillaServer.Service
 @using HiddenVillaServer.Model.MetaData
 @using HiddenVillaServer.Data
 @inject IHotelRoomRepo hotelRepo
 @inject IHotelImagesRepository _Images
-@inject NavigationManager navigationManager
+
 @inject IFileUpload _fileUploader
 @inject VillaDbContext _VillaDb
 <ToastContainer />
@@ -133,7 +135,7 @@
                     {
                         foreach (var deletedImageName in DeletedImageNames)
                         {
-                            var imageName = deletedImageName.Replace($"RoomImages/","");
+                            var imageName = deletedImageName.Replace($"{navigationManager.BaseUri}RoomImages/","");
                             var result = _fileUploader.DeleteFile(imageName);
                             await _Images.DeleteImageByIdByImageUrl(deletedImageName);
                         }
@@ -220,7 +222,7 @@
         try
         {
             var imageIndex = HotelRoomModel.ImageUrls.FindIndex(x => x == roomImageUrl);
-            var imageName = roomImageUrl.Replace($"RoomImages/","");
+            var imageName = roomImageUrl.Replace($"{navigationManager.BaseUri}RoomImages/","");
             if (HotelRoomModel.Id == 0 && Title == "Create")
             {
                 var result = _fileUploader.DeleteFile(imageName);

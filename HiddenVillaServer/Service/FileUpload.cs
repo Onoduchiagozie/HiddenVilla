@@ -6,10 +6,13 @@ namespace HiddenVillaServer.Service;
 public class FileUpload:IFileUpload
 {
     private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public FileUpload(IWebHostEnvironment webHostEnvironment)
+    public FileUpload(IWebHostEnvironment webHostEnvironment,
+        IHttpContextAccessor httpContextAccessor)
     {
         _webHostEnvironment = webHostEnvironment;
+        _httpContextAccessor = httpContextAccessor;
     }
     
     public async Task<string> UploadFile(IBrowserFile file)
@@ -33,8 +36,9 @@ public class FileUpload:IFileUpload
             {
                 memoryStream.WriteTo(fs);
             }
+            var url = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host.Value}/";
 
-            var fullpath = $"RoomImages/{filename}";
+            var fullpath = $"{url}RoomImages/{filename}";
             return fullpath;
         }
         catch(Exception ex)
