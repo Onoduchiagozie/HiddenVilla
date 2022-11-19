@@ -3,8 +3,6 @@
 @inject NavigationManager navigationManager
 @inject IHotelAmenity _Amenity
 <ToastContainer />
-
-
 <div class="row mt-2 mb-5">
     <h3 class="card-title text-info mb-3  m-lg-3 ">
         @Title Amenity
@@ -48,6 +46,8 @@
 
 </div>
 @code {
+    [CascadingParameter]
+    public Task<AuthenticationState> IsAuthenticated { get; set; }
 
     [Inject]
     protected Sotsera.Blazor.Toaster.IToaster toast { get; set; }
@@ -61,6 +61,12 @@
 
     protected async override Task OnInitializedAsync()
     {
+        var authenticationstate = await IsAuthenticated;
+        if (!authenticationstate.User.IsInRole(SD.Admin))
+        {
+            var uri = new Uri(navigationManager.Uri);
+            navigationManager.NavigateTo($"/Identity/Account/Login?returnUrl={uri.LocalPath}");
+        }
         if (Id != null)
         {
             Title = "Update";

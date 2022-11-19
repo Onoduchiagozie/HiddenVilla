@@ -19,13 +19,14 @@ builder.Services.AddDbContext<VillaDbContext>(options =>
                         .GetConnectionString("DefaultConnection"))
                         );
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<VillaDbContext>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddScoped<IHotelRoomRepo,HotelRoomRepo>();
+builder.Services.AddScoped<IHotelRoomRepo,HotelRoomRepo>(); 
 builder.Services.AddScoped<IHotelImagesRepository,HotelImagesRepository>();
 builder.Services.AddScoped<IHotelAmenity,HotelAmenityRepository>();
 builder.Services.AddScoped<IFileUpload,FileUpload>();
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddToaster(config =>
 {
     //example customizations
@@ -59,5 +60,10 @@ app.UseAuthorization();
 app.MapRazorPages();    
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-
+using(var scope = app.Services.CreateScope())
+{
+    var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+    // use dbInitializer
+    dbInitializer.Initialize();
+}
 app.Run();

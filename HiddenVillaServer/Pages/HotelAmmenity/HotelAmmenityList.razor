@@ -1,6 +1,7 @@
 ﻿@page "/hotel-amenity"
 @inject IHotelAmenity _Amenity
 <ToastContainer/>
+@attribute [Authorize(Roles = SD.Admin)]
 <div class="row mt-4">
     <div class="col-8">
         <h4 class="card-title text-info">
