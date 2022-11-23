@@ -1,4 +1,6 @@
-﻿using HiddenVillaServer.Data.Repository.IRepository;
+﻿using HiddenVillaServer;
+using HiddenVillaServer.Data.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HiddenVilla_Web_Api.Controllers

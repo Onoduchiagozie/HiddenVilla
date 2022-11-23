@@ -7,10 +7,10 @@ namespace HiddenVillaServer.Service;
 public class DbInitializer:IDbInitializer
 {
     private readonly VillaDbContext _db;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     public DbInitializer(VillaDbContext db,
-        UserManager<IdentityUser> userManager,
+        UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager)
     {
         _db = db;
@@ -37,14 +37,14 @@ public class DbInitializer:IDbInitializer
         _roleManager.CreateAsync(new IdentityRole(SD.Customer)).GetAwaiter().GetResult();
         _roleManager.CreateAsync(new IdentityRole(SD.Employee)).GetAwaiter().GetResult();
 
-        _userManager.CreateAsync(new IdentityUser
+        _userManager.CreateAsync(new ApplicationUser
         {
             UserName = "admin@gmail.com",
             Email = "admin@gmail.com",
             EmailConfirmed = true
         },"Admin123*").GetAwaiter().GetResult();
 
-        IdentityUser user = _db.Users.FirstOrDefault(x => x.Email == "admin@gmail.com");
+        ApplicationUser user = _db.Users.FirstOrDefault(x => x.Email == "admin@gmail.com");
         _userManager.AddToRoleAsync(user, SD.Admin).GetAwaiter().GetResult();
     }
 }

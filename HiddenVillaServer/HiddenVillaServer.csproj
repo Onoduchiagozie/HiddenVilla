@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.10" />
@@ -58,6 +59,10 @@
     <_ContentIncludedByDefault Remove="wwwroot\RoomImages\ea217588-a5ce-4629-97d9-d64c0ffd3efa.jpg" />
     <_ContentIncludedByDefault Remove="wwwroot\RoomImages\ee49d783-d516-4506-9298-23d258a45cd7.jpg" />
     <_ContentIncludedByDefault Remove="wwwroot\RoomImages\f9c4a66d-2d46-44f4-b36c-60a51d6bf6f2.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Model\NewFolder\" />
   </ItemGroup>
 
 </Project>

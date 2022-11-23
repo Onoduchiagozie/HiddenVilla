@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace HiddenVilla_Web_Api.Model
+namespace HiddenVillaServer.Service
 {
     public class ApplicationUser:IdentityUser
     {
+        public string Name { get; set; }
     }
 }
