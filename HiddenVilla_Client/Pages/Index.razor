@@ -1,6 +1,8 @@
 ﻿@page "/"
 @using HiddenVilla_Client.Model
-
+@inject Blazored.LocalStorage.ILocalStorageService _localStorageService
+@inject NavigationManager _navigationManager
+<ToastContainer />
 <div class="row p-0 m-0">
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
@@ -25,7 +27,7 @@
         </a>
     </div>
 </div>
-<EditForm Model="HomeModel">
+<EditForm Model="HomeModel" OnValidSubmit="SaveInitialData">
     <div class="row p-0 mx-0 mt-4">
 
         <div class="col-12 col-md-5  offset-md-1 pl-2  pr-2 pr-md-0">
@@ -61,5 +63,25 @@
 
 @code
 {
+    [Inject] 
+    protected Sotsera.Blazor.Toaster.IToaster toast { get; set; }
     public HomeVm HomeModel { get; set; } = new HomeVm();
+
+    private async Task SaveInitialData()
+    {
+        try
+        {
+            HomeModel.EndDate = HomeModel.StartDate.AddDays(HomeModel.NoOfNights);
+            await _localStorageService.SetItemAsync("RoomBookingInfo",HomeModel);
+            _navigationManager.NavigateTo("/hotel/rooms",true);
+            
+        }
+        catch (Exception e)
+        {
+            toast.Warning(e.ToString());
+            Console.WriteLine(e);
+            throw;
+        }
+        
+    }
 }
