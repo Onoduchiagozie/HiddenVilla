@@ -47,7 +47,7 @@ namespace HiddenVillaServer.Data.Repository
 
         }
 
-        public async Task<IEnumerable<HotelRoomDTO>> GetAllHotelRooms()
+        public async Task<IEnumerable<HotelRoomDTO>> GetAllHotelRooms(string checkinDatestr,string CheckoutDatestr)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace HiddenVillaServer.Data.Repository
             }
         }
 
-        public async Task<HotelRoomDTO> GetHotelRoom(int roomId)
+        public async Task<HotelRoomDTO> GetHotelRoom(int roomId,string checkinDatestr,string CheckoutDatestr)
         {
             try
             {

@@ -1,6 +1,40 @@
 ﻿@page "/hotel/rooms"
+@inject Blazored.LocalStorage.ILocalStorageService _localStorage;
+@inject IHotelRoomService _hotelRoomService
+
 <h3>HotelRoom</h3>
 
 @code {
-    
+    private HomeVm HomeModel { get; set; } = new HomeVm();
+    public IEnumerable<HotelRoomDTO> Rooms { get; set; } = new List<HotelRoomDTO>();
+    [Inject] 
+    protected Sotsera.Blazor.Toaster.IToaster toast { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            if (await _localStorage.GetItemAsync<HomeVm>("RoomBookingInfo") != null)
+            {
+                HomeModel = await _localStorage.GetItemAsync<HomeVm>("RoomBookingInfo");
+            }
+            else
+            {
+                HomeModel.NoOfNights = 1;
+            }
+            await LoadRooms();
+        }
+        catch (Exception e)
+        {
+            toast.Warning(e.ToString());
+        }
+    }
+
+    private async Task LoadRooms()
+    {
+        Rooms = await _hotelRoomService.GetHotelRooms(HomeModel.StartDate.ToString("MM/dd/yyyy"),HomeModel.StartDate.ToString("MM/dd/yyyy"));
+    }
+
+
+
 }
