@@ -1,13 +1,14 @@
 ﻿using HiddenVillaServer.Model;
 using HiddenVillaServer.Model.MetaData;
 using HiddenVillaServer.Service;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace HiddenVillaServer.Data
 {
-    public class VillaDbContext :IdentityDbContext<ApplicationUser>
+    public class VillaDbContext :IdentityDbContext<IdentityUser>
     {
         public VillaDbContext (DbContextOptions<VillaDbContext> options) : base(options)
         {

@@ -37,7 +37,7 @@
                 </div>
                 
                  <div class="form-group">
-                    <button class="btn btn-primary">@Title Room</button>
+                    <button class="btn btn-primary">@Title Amenity</button>
                     <NavLink href="hotel-amenity" class="btn btn-secondary"> Back To Index</NavLink>
                 </div>
             </EditForm>
@@ -62,11 +62,7 @@
     protected async override Task OnInitializedAsync()
     {
         var authenticationstate = await IsAuthenticated;
-        if (!authenticationstate.User.IsInRole(SD.Admin))
-        {
-            var uri = new Uri(navigationManager.Uri);
-            navigationManager.NavigateTo($"/Identity/Account/Login?returnUrl={uri.LocalPath}");
-        }
+    
         if (Id != null)
         {
             Title = "Update";

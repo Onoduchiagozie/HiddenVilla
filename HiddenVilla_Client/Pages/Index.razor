@@ -2,6 +2,7 @@
 @using HiddenVilla_Client.Model
 @inject Blazored.LocalStorage.ILocalStorageService _localStorageService
 @inject NavigationManager _navigationManager
+@inject IAmenityService _amenity
 <ToastContainer />
 <div class="row p-0 m-0">
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -33,7 +34,7 @@
         <div class="col-12 col-md-5  offset-md-1 pl-2  pr-2 pr-md-0">
             <div class="form-group">
                 <label>Check In Date</label>
-                <InputDate min="@DateTime.Now.ToString("yyyy-MM-dd")" @bind-Value="@HomeModel.StartDate" Type="InputDateType.Date" class="form-control" />
+                <InputDate min="@DateTime.Now.ToString("MM/dd/yyyy")" @bind-Value="@HomeModel.StartDate" Type="InputDateType.Date" class="form-control" />
             </div>
         </div>
 
@@ -61,11 +62,46 @@
     </div>
 </EditForm>
 
+<hr />
+<div class="container pt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 text-center">
+            <h2 class="text-warning">Explore our Amenities</h2>
+            <p class="lead">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var amenity in HotelAmenities)
+        {
+            <div class="col-md-4 col-6 p-4">
+                <div style="border:1px solid #d5d5d5; border-radius:20px;">
+                    <div class="row col-4 offset-4 p-4">
+                       
+                        <span class="@amenity.Icon fa-4x"></span>
+                    </div>
+                    <div class="text-center justify-content-center">
+                        <h5 class="text-warning">@amenity.Name</h5>
+                        <p>@amenity.Description</p>
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
 @code
 {
+    public IEnumerable<HotelAmenity> HotelAmenities { get; set; } = new List<HotelAmenity>();
     [Inject] 
     protected Sotsera.Blazor.Toaster.IToaster toast { get; set; }
     public HomeVm HomeModel { get; set; } = new HomeVm();
+
+    protected async override Task OnInitializedAsync()
+    {
+        HotelAmenities = await _amenity.GetAmenities();
+    }
 
     private async Task SaveInitialData()
     {
@@ -73,6 +109,7 @@
         {
             HomeModel.EndDate = HomeModel.StartDate.AddDays(HomeModel.NoOfNights);
             await _localStorageService.SetItemAsync("RoomBookingInfo",HomeModel);
+            var test2 = _localStorageService.GetItemAsync<HomeVm>("RoomBookingInfo");
             _navigationManager.NavigateTo("/hotel/rooms",true);
             
         }

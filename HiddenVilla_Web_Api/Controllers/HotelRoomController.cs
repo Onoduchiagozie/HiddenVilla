@@ -24,7 +24,7 @@ namespace HiddenVilla_Web_Api.Controllers
                     new ErroModel()
                     {
                         StatusCode = StatusCodes.Status400BadRequest,
-                        Title = "Must Contains At Least  A Valid Date"
+                        Title = "ALL PARAMETERS MUST BE SUPPLIED"
                     });
             }
 
@@ -38,14 +38,14 @@ namespace HiddenVilla_Web_Api.Controllers
                         Title = "invalid checkin date format try MM/dd/yyyy"
                     });
             }
-            if (!DateTime.TryParseExact(checkinDate, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None,
-                    out var dtcheckoutDate))
+            if (!DateTime.TryParseExact(CheckoutDate, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None,
+                    out var dtCheckoutDate))
             {
                 return BadRequest(
                     new ErroModel()
                     {
                         StatusCode = StatusCodes.Status400BadRequest,
-                        Title = "invalid checkin date format try MM/dd/yyyy"
+                        Title = "Invalid Checkin Date Format Try MM/dd/yyyy"
                     });
             }
             var allRooms =await _roomRepo.GetAllHotelRooms(checkinDate,CheckoutDate);
@@ -83,11 +83,7 @@ namespace HiddenVilla_Web_Api.Controllers
                        StatusCode = StatusCodes.Status400BadRequest,
                        Title = "invalid checkin date format try MM/dd/yyyy"
                    });
-           }
-           
-           http://localhost:16961
-           
-           
+           }   
            
            if (!DateTime.TryParseExact(checkinDate, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None,
                    out var dtcheckoutDate))

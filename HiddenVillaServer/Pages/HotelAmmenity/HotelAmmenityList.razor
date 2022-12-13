@@ -1,7 +1,6 @@
 ﻿@page "/hotel-amenity"
 @inject IHotelAmenity _Amenity
 <ToastContainer/>
-@attribute [Authorize(Roles = SD.Admin)]
 <div class="row mt-4">
     <div class="col-8">
         <h4 class="card-title text-info">
@@ -9,7 +8,8 @@
         </h4>
        </div>
        <div class="col-3 offset-1">
-           <NavLink href="hotel-amenity/create" class="btn btn-info form-control">
+  
+           <NavLink href="/hotel-amenity/create" class="btn btn-info form-control">
                 Add Amenity
            </NavLink>
        </div>
@@ -19,14 +19,10 @@
         <table class="table table-bordered table-hover">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Timing</th>
-                <th>Rate</th>
-                <th>SqFt</th>
-                <th>
-
-                </th>
-                 
+                    <th>Name</th>
+                    <th>Timming</th>
+                    <th>Icon</th>
+                    <th>Actions</th>     
             </tr>
             </thead>
             <tbody>
@@ -37,7 +33,9 @@
                     <tr>
                         <td>@item.Name</td>
                         <td>@item.Timing</td>
-                        <td>@item.Icon</td>
+                        <td>
+                            <i class="@item.Icon"></i>
+                        </td>
                         <td>
                             <NavLink href="@($"hotel-amenity/edit/{item.Id}")" 
                                      class="btn btn-primary">Edit</NavLink>
