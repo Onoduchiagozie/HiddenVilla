@@ -11,16 +11,16 @@ public class AmenityService : IAmenityService
     {
         _httpClient = client;
     }
-    public async Task<IEnumerable<HotelAmenity>> GetAmenities()
+    public async Task<IEnumerable<HotelClientAmenity>> GetAmenities()
     {
         var response =
             await _httpClient.GetAsync($"api/Amenity");
         var content = await response.Content.ReadAsStringAsync();
-        var amenity = JsonConvert.DeserializeObject<IEnumerable<HotelAmenity>>(content);
+        var amenity = JsonConvert.DeserializeObject<IEnumerable<HotelClientAmenity>>(content);
         return amenity;
     }
 
-    public Task<HotelAmenity> GetAmenity(int amenityId)
+    public Task<HotelClientAmenity> GetAmenity(int amenityId)
     {
         throw new NotImplementedException();
     }

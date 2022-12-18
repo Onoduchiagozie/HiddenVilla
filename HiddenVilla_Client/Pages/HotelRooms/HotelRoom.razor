@@ -91,7 +91,7 @@
                         <div class="row pb-3 pt-2">
                             <div class="col-12 col-lg-11 offset-lg-1">
 
-                                <a href="@($"hotel/room-details/${room.Id}")" class="btn btn-success btn-block">Book</a>
+                                <a href="@($"hotel/room-details/{room.Id}")" class="btn btn-success btn-block">Book</a>
 
                             </div>
                         </div>
@@ -125,12 +125,13 @@ else{
 
 @code {
     private HomeVm HomeModel { get; set; } = new HomeVm();
-    public IEnumerable<HotelRoomDTO> Rooms { get; set; } = new List<HotelRoomDTO>();
+    public IEnumerable<HotelRoomClient> Rooms { get; set; } = new List<HotelRoomClient>();
     [Inject] 
     protected Sotsera.Blazor.Toaster.IToaster toast { get; set; }
 
     private bool IsProcessing { get; set; } = false;
 
+    //Initializer THE HOMEMODEL TO RECIEVE DATA FROM LOCAL STRORAGE
     protected async override Task OnInitializedAsync()
     {
         try
@@ -138,6 +139,7 @@ else{
             if (await _localStorage.GetItemAsync<HomeVm>("RoomBookingInfo") != null)
             {
                 HomeModel = await _localStorage.GetItemAsync<HomeVm>("RoomBookingInfo");
+                toast.Success("Welcome");
             }
             else
             {
@@ -151,6 +153,8 @@ else{
         }
     }
 
+
+    //LOADS AVAILABLE ROOMS USING SERVICE
     private async Task LoadRooms()
     {
         Rooms = await _hotelRoomService.GetHotelRooms(
@@ -164,6 +168,7 @@ else{
         }
     }
 
+    //BESIDES BOOK ROOM BUTTON UPDATES THE ROOM DETAILS WITH NEW NO OF NIGHTS
     private async Task SaveBookingInfo()
     {
         IsProcessing = true;

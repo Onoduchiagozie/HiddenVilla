@@ -93,7 +93,7 @@ namespace HiddenVillaServer.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("HiddenVillaServer.Model.HotelAmenity", b =>
+            modelBuilder.Entity("HiddenVillaServer.Model.HotelClientAmenity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -167,7 +167,7 @@ namespace HiddenVillaServer.Migrations
                     b.ToTable("HotelRooms");
                 });
 
-            modelBuilder.Entity("HiddenVillaServer.Model.MetaData.HotelImage", b =>
+            modelBuilder.Entity("HiddenVillaServer.Model.MetaData.HotelClientImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -326,7 +326,7 @@ namespace HiddenVillaServer.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("HiddenVillaServer.Model.MetaData.HotelImage", b =>
+            modelBuilder.Entity("HiddenVillaServer.Model.MetaData.HotelClientImage", b =>
                 {
                     b.HasOne("HiddenVillaServer.Model.HotelRoom", "HotelRoom")
                         .WithMany("HotelImages")

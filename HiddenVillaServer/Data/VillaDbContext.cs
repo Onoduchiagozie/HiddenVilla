@@ -1,4 +1,5 @@
-﻿using HiddenVillaServer.Model;
+﻿using HiddenVilla_Client.Model;
+using HiddenVillaServer.Model;
 using HiddenVillaServer.Model.MetaData;
 using HiddenVillaServer.Service;
 using Microsoft.AspNetCore.Identity;
@@ -16,5 +17,6 @@ namespace HiddenVillaServer.Data
        public DbSet<HotelRoom> HotelRooms { get; set; }
        public DbSet<HotelImage> HotelImages { get; set; }
        public DbSet<HotelAmenity> HotelAmmenities { get; set; }
+       public DbSet<RoomOrderDetails> RoomOrderingDetails { get; set; }
     }
 }

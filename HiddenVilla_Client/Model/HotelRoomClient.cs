@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 namespace HiddenVilla_Client.Model
 {
-    public class HotelRoomDTO
+    public class HotelRoomClient
     {
         [Key]
         public int Id { get; set; }
@@ -17,8 +17,8 @@ namespace HiddenVilla_Client.Model
         public double TotalDays { get; set; }
         public double TotalAmount { get; set; }
         
-        public virtual ICollection<HotelImage> HotelImages { get; set; }
-        public List<string> ImageUrls { get; set; }
+        public virtual ICollection<HotelClientImage> HotelImages { get; set; }
+        public List<ImageURI>? ImageUrls { get; set; }
        
     }
 }

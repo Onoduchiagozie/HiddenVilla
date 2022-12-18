@@ -23,4 +23,5 @@ builder.Services.AddScoped<IAmenityService, AmenityService>();
 builder.Services.AddScoped(sp => new HttpClient {BaseAddress = new Uri(builder.Configuration.GetValue<string>("BaseAPIUrl")) }
                            );
 builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddScoped<IRoomOrderDetailsClient, RoomOrderDetailsClient>();  
 await builder.Build().RunAsync();

@@ -65,4 +65,8 @@
     <Folder Include="Model\NewFolder\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HiddenVilla_Client\HiddenVilla_Client.csproj" />
+  </ItemGroup>
+
 </Project>

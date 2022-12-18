@@ -41,6 +41,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IHotelRoomRepo, HotelRoomRepo>();
 builder.Services.AddScoped<IHotelImagesRepository, HotelImagesRepository>();
 builder.Services.AddScoped<IHotelAmenity, HotelAmenityRepository>();
+builder.Services.AddScoped<IRoomOrderDetailsRepo, RoomOrderDetailsRepo>();
+
 
 
 

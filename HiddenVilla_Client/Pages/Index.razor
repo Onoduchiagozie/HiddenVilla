@@ -93,7 +93,7 @@
 
 @code
 {
-    public IEnumerable<HotelAmenity> HotelAmenities { get; set; } = new List<HotelAmenity>();
+    public IEnumerable<HotelClientAmenity> HotelAmenities { get; set; } = new List<HotelClientAmenity>();
     [Inject] 
     protected Sotsera.Blazor.Toaster.IToaster toast { get; set; }
     public HomeVm HomeModel { get; set; } = new HomeVm();
@@ -110,6 +110,7 @@
             HomeModel.EndDate = HomeModel.StartDate.AddDays(HomeModel.NoOfNights);
             await _localStorageService.SetItemAsync("RoomBookingInfo",HomeModel);
             var test2 = _localStorageService.GetItemAsync<HomeVm>("RoomBookingInfo");
+            toast.Warning("Bye");
             _navigationManager.NavigateTo("/hotel/rooms",true);
             
         }

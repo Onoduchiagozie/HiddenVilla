@@ -2,7 +2,7 @@
 
 namespace HiddenVilla_Client.Model
 {
-    public class HotelAmenity
+    public class HotelClientAmenity
     {
         [Key]
         public int Id { get; set; }

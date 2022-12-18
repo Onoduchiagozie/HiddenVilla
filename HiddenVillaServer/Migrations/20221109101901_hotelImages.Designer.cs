@@ -69,7 +69,7 @@ namespace HiddenVillaServer.Migrations
                     b.ToTable("HotelRooms");
                 });
 
-            modelBuilder.Entity("HiddenVillaServer.Model.MetaData.HotelImage", b =>
+            modelBuilder.Entity("HiddenVillaServer.Model.MetaData.HotelClientImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -91,7 +91,7 @@ namespace HiddenVillaServer.Migrations
                     b.ToTable("HotelImages");
                 });
 
-            modelBuilder.Entity("HiddenVillaServer.Model.MetaData.HotelImage", b =>
+            modelBuilder.Entity("HiddenVillaServer.Model.MetaData.HotelClientImage", b =>
                 {
                     b.HasOne("HiddenVillaServer.Model.HotelRoom", "HotelRoom")
                         .WithMany()

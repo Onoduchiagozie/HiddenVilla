@@ -2,8 +2,7 @@
 @inject HiddenVillaServer.Service.IFileUpload fileupload
 @inject IHotelRoomRepo hotelRepo
 @page "/hotel-room"
-<DeleteConfirmation/>
-
+<ToastContainer />
 <div class="row mt-4">
     <div class="col-8">
         <h4 class="card-title text-info">
@@ -66,16 +65,17 @@
 
 <DeleteConfirmation/>
 @code {
-    
+
     private IEnumerable<HotelRoomDTO> HotelRooms { get; set; } = new List<HotelRoomDTO>();
     [Inject] 
     protected Sotsera.Blazor.Toaster.IToaster toast { get; set; }
 
     public int? DeleteRoomId { get; set; }
-    
+
     protected override async Task OnInitializedAsync()
     {
         HotelRooms = await hotelRepo.GetAllHotelRooms();
+        toast.Success("Welcome");
     }
 
     private async Task HandleDelete(int roomId)
