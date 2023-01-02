@@ -1,0 +1,48 @@
+﻿@page "/success-payment"
+@inject Blazored.LocalStorage.ILocalStorageService _localStorage;
+@inject IRoomOrderDetailsClient _roomOrder
+
+<div class="container">
+    @if (!isPaymentComplete)
+    {
+        <div style="position:fixed;top:50%;left:50%;margin-top:-50px;margin-left:-100px;">
+            <img src="images/ajax-loader.gif" />
+        </div>
+    }
+    else
+    {
+     <div class="row mt-4 pt-4">
+        <div class="col-10 offset-1 text-center">
+            <h2 class="text-warning">Booking Confirmed</h2>
+            <p>Your room has been booked successfully with order id @OrderId</p>
+        </div>
+    <div class="col-8 offset-2">
+        <img src="/images/confirmation.jpg" width="100%" style="border-radius:30px;" />
+    </div>
+    </div>    
+    }
+   
+
+</div>
+
+
+@code {
+    public bool isPaymentComplete { get; set; } = false;
+    public int OrderId { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var Orderdetail = await _localStorage.GetItemAsync<RoomOrderDetails>("RoomOrderLocalStorage");
+        OrderId = Orderdetail.Id;
+
+        var FinalOrderedRoom = await _roomOrder.PaymentSuccessfull(Orderdetail);
+        if (FinalOrderedRoom.OrderStatus == "Booked")
+        {
+            await _localStorage.RemoveItemAsync("RoomOrderLocalStorage");
+            await _localStorage.RemoveItemAsync("RoomBookingInfo");
+            isPaymentComplete = true;
+
+        }
+    }
+}

@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 	  <StaticWebAssetBasePath>.HiddenVilla_Client</StaticWebAssetBasePath>
+	  <UserSecretsId>fc8cd76a-5625-465f-a3c9-9c5bdb8f39c5</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="..\..\..\..\..\AppData\Roaming\Microsoft\UserSecrets\fc8cd76a-5625-465f-a3c9-9c5bdb8f39c5\secrets.json" Link="secrets.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.10" PrivateAssets="all" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.10" />

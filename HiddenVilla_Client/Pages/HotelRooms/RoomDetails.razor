@@ -1,9 +1,11 @@
 ﻿@page "/hotel/room-details/{Id:int}"
 @inject Blazored.LocalStorage.ILocalStorageService _localStorage;
 @inject IHotelRoomService _hotelroomservice
-
+@inject IStripePaymentService _stripe
+@inject IRoomOrderDetailsClient _roomorder
+@inject IJSRuntime _jsRuntime
 <ToastContainer />
-@if(HotelRoomOrderVm?.OrderDetails?.hotelRoomDTO?.HotelImages == null)
+@if(HotelRoomOrderVm?.OrderDetails?.hotelRoomDTO?.Occupancy == null)
 {
     <div class="spinner"></div>
 }
@@ -107,8 +109,16 @@ else
                         </select>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-success form-control">Checkout Now</button>
-                    </div>
+                        @if (HotelRoomOrderVm.OrderDetails.hotelRoomDTO.IsBooked)
+                        {
+                            <input type="button" class="btn btn-secondary form-control" value="Sold Out" />
+                        }
+                        else
+                        {
+                             <button type="submit" class="btn btn-success form-control">Checkout Now</button>
+                        }
+                        
+                                  </div>
                 </EditForm>
             </div>
         </div>
@@ -171,6 +181,14 @@ else
                     HotelRoomOrderVm.OrderDetails.hotelRoomDTO.TotalAmount =
                      HotelRoomOrderVm.OrderDetails.hotelRoomDTO.RegularRate;
                 }
+
+                if (await _localStorage.GetItemAsync<UserDTO>("User_Details") != null)
+                {
+                    var userInfo = await _localStorage.GetItemAsync<UserDTO>("User_Details");
+                    HotelRoomOrderVm.OrderDetails.UserId = userInfo.Id;
+                    HotelRoomOrderVm.OrderDetails.Name = userInfo.Name;
+                    HotelRoomOrderVm.OrderDetails.Email = userInfo.Email;
+                }
             }
         }
         catch(Exception e)
@@ -187,17 +205,52 @@ else
         {
             return;
         }
+        try
+        {
+            var paymentModel = new StripePayment
+                {
+                    Amount = Convert.ToInt32(HotelRoomOrderVm.OrderDetails.hotelRoomDTO.TotalAmount * 100),
+                    BoughtRoomName = HotelRoomOrderVm.OrderDetails.hotelRoomDTO.Name,
+                    ReturnUrl = "/hotel/room-details/" + Id
+                };
+
+            var result = await _stripe.Checkout(paymentModel);
+
+            HotelRoomOrderVm.OrderDetails.StripeSessionId = result.Data.ToString();
+            HotelRoomOrderVm.OrderDetails.hotelRoomDTO.HotelImages = null;
+            //HotelRoomOrderVm.OrderDetails.hotelRoomDTO.Id=Guid.NewGuid.
+            HotelRoomOrderVm.OrderDetails.RoomId = HotelRoomOrderVm.OrderDetails.hotelRoomDTO.Id;
+            HotelRoomOrderVm.OrderDetails.TotalCost = HotelRoomOrderVm.OrderDetails.hotelRoomDTO.TotalAmount;
+
+            var roomOrderDetailsSaved = await _roomorder.SaveRoomOrderDetails(HotelRoomOrderVm.OrderDetails);
+            await  _localStorage.SetItemAsync("RoomOrderLocalStorage", roomOrderDetailsSaved);
+            await _jsRuntime.InvokeVoidAsync("redirectToCheckout", result.Data.ToString());
+
+
+        }
+        catch(Exception ex)
+        {
+            toast.Warning(ex.ToString(),"Exception");
+
+        }
     }
 
     private async Task<bool> Validation()
     {
         if (string.IsNullOrEmpty(HotelRoomOrderVm.OrderDetails.Name))
         {
-            toast.Error("Name is empty");
+            toast.Error("Name Cannot be empty");
+            return false;
+        }
+        if (string.IsNullOrEmpty(HotelRoomOrderVm.OrderDetails.Email))
+        {
+            toast.Error("Email cannot empty");
             return false;
         }
         return true;
     }
+
+
     private async Task HandleNoOfNightChange(ChangeEventArgs e)
     {
         NoOfNights = Convert.ToInt32(e.Value.ToString());

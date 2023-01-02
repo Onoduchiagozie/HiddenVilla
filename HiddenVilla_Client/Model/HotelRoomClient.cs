@@ -1,9 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace HiddenVilla_Client.Model
 {
+    [NotMapped]
     public class HotelRoomClient
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+
         public int Id { get; set; }
         [Required(ErrorMessage ="Enter A Room")]
         public string Name { get; set; }
@@ -16,9 +22,10 @@ namespace HiddenVilla_Client.Model
 
         public double TotalDays { get; set; }
         public double TotalAmount { get; set; }
-        
-        public virtual ICollection<HotelClientImage> HotelImages { get; set; }
-        public List<ImageURI>? ImageUrls { get; set; }
        
+        public virtual ICollection<HotelClientImage>? HotelImages { get; set; }
+        public List<ImageURI>? ImageUrls { get; set; }
+        public bool IsBooked { get; set; }
+
     }
 }

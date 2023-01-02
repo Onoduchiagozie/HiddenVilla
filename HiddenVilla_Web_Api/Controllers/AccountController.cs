@@ -17,14 +17,14 @@ namespace HiddenVilla_Web_Api.Controllers;
 // [Authorize]
 public class AccountController : Controller
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<IdentityUser> _signInManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly APISettings _apiSettings;
     // GET
     public AccountController(
-        UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager,
+        UserManager<IdentityUser> userManager,
+        SignInManager<IdentityUser> signInManager,
         IOptions<APISettings> options,
         RoleManager<IdentityRole> roleManager)
     {
@@ -44,15 +44,15 @@ public class AccountController : Controller
             return BadRequest();
         }
 
-        var user = new ApplicationUser
+        var user = new IdentityUser(userName: userRequestDto.Name )
         {
             UserName = userRequestDto.Email,
             Email = userRequestDto.Email,
-            Name = userRequestDto.Name,
             PhoneNumber = userRequestDto.PhoneNo,
             EmailConfirmed = true
         };
         var result = await _userManager.CreateAsync(user, userRequestDto.Password);
+
         if (!result.Succeeded)
         {
             var errors = result.Errors.Select(e => e.Description);
@@ -112,7 +112,7 @@ public class AccountController : Controller
                 Token = token,
                 UserDto = new UserDTO
                 {
-                    Name = user.Name,
+                    Name = user.Email.ToString().Split("@")[0],
                     Id = user.Id,
                     Email = user.Email,
                     PhoneNo = user.PhoneNumber
@@ -136,7 +136,7 @@ public class AccountController : Controller
         return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
     }
 
-    private async Task<List<Claim>> GetClaims(ApplicationUser user)
+    private async Task<List<Claim>> GetClaims(IdentityUser user)
     {
         var claims = new List<Claim>
         {

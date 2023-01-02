@@ -1,9 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using HiddenVillaServer.Model.MetaData;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ClassLibrary1
+namespace HiddenVillaServer.Model
 {
     public class HotelRoom
     {
+
         [Key]
         public int Id { get; set; }
         [Required]
@@ -18,5 +25,7 @@ namespace ClassLibrary1
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public string UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; }
+        public virtual ICollection<HotelImage> HotelImages { get; set; }
     }
+
 }

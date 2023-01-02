@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HiddenVillaServer.Migrations
 {
-    public partial class roomDetailsToDb5 : Migration
+    public partial class Fk_Fix : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,8 +13,7 @@ namespace HiddenVillaServer.Migrations
                 name: "HotelRoomClient",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Occupancy = table.Column<int>(type: "int", nullable: false),
                     RegularRate = table.Column<double>(type: "float", nullable: false),
@@ -25,7 +24,7 @@ namespace HiddenVillaServer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HotelRoomDTO", x => x.Id);
+                    table.PrimaryKey("PK_HotelRoomClient", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -41,7 +40,7 @@ namespace HiddenVillaServer.Migrations
                 {
                     table.PrimaryKey("PK_HotelClientImage", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_HotelClientImage_HotelRoomDTO_RoomId",
+                        name: "FK_HotelClientImage_HotelRoomClient_RoomId",
                         column: x => x.RoomId,
                         principalTable: "HotelRoomClient",
                         principalColumn: "Id",
@@ -55,14 +54,14 @@ namespace HiddenVillaServer.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Uri = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    HotelRoomDTOId = table.Column<int>(type: "int", nullable: true)
+                    HotelRoomClientId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ImageURI", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ImageURI_HotelRoomDTO_HotelRoomDTOId",
-                        column: x => x.HotelRoomDTOId,
+                        name: "FK_ImageURI_HotelRoomClient_HotelRoomClientId",
+                        column: x => x.HotelRoomClientId,
                         principalTable: "HotelRoomClient",
                         principalColumn: "Id");
                 });
@@ -79,22 +78,22 @@ namespace HiddenVillaServer.Migrations
                     CheckOutDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ActualCheckOutDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ActualCheckInDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TotalCost = table.Column<long>(type: "bigint", nullable: false),
+                    TotalCost = table.Column<double>(type: "float", nullable: false),
                     RoomId = table.Column<int>(type: "int", nullable: false),
                     isPaymentSuccessful = table.Column<bool>(type: "bit", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrderStatus = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    hotelRoomDTOId = table.Column<int>(type: "int", nullable: true),
+                    OrderStatus = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RoomOrderingDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RoomOrderingDetails_HotelRoomDTO_RoomId",
-                        column: x => x.RoomId,
+                        name: "FK_RoomOrderingDetails_HotelRoomClient_hotelRoomDTOId",
+                        column: x => x.hotelRoomDTOId,
                         principalTable: "HotelRoomClient",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -103,14 +102,14 @@ namespace HiddenVillaServer.Migrations
                 column: "RoomId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ImageURI_HotelRoomDTOId",
+                name: "IX_ImageURI_HotelRoomClientId",
                 table: "ImageURI",
-                column: "HotelRoomDTOId");
+                column: "HotelRoomClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoomOrderingDetails_RoomId",
+                name: "IX_RoomOrderingDetails_hotelRoomDTOId",
                 table: "RoomOrderingDetails",
-                column: "RoomId");
+                column: "hotelRoomDTOId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -12,7 +12,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
-
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +32,7 @@ builder.Services.AddDbContext<VillaDbContext>(options =>
                         options.UseSqlServer(builder.Configuration
                         .GetConnectionString("DefaultConnection"))
                         );
-builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<VillaDbContext>();
+builder.Services.AddIdentity<IdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<VillaDbContext>();
 // builder.Services.AddDefaultIdentity<ApplicationUser>
 //         (options => options.SignIn.RequireConfirmedAccount = true)
 //     .AddRoles<IdentityRole>()
@@ -110,6 +110,9 @@ builder.Services.AddCors(
     })
 );
 var app = builder.Build();
+
+
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["secretkey"];
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

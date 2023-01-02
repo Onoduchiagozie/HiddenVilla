@@ -2,8 +2,8 @@
 
 namespace HiddenVillaServer.Service
 {
-    public class ApplicationUser:IdentityUser
-    {
-        public string Name { get; set; }
-    }
+    //public class ApplicationUser:IdentityUser
+    //{
+    //    public string Name { get; set; }
+    //}
 }

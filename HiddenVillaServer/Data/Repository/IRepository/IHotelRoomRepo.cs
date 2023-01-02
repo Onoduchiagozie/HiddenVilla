@@ -10,6 +10,7 @@ namespace HiddenVillaServer.Data.Repository.IRepository
         public Task<IEnumerable<HotelRoomDTO>>  GetAllHotelRooms(string checkinDate=null,string CheckoutDate=null);
         public Task<HotelRoomDTO> IsRoomUnique(string hotelname,int roomId=0);
         public Task<int> DeleteHotel(int roomId);
+        public Task<bool> IsRoomBooked(int roomId, string checkindate, string checkoutdate);
 
     }
 }

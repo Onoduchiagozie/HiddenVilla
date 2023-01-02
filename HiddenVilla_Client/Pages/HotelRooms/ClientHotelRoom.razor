@@ -90,8 +90,16 @@
                     <div class="col-12 col-lg-4">
                         <div class="row pb-3 pt-2">
                             <div class="col-12 col-lg-11 offset-lg-1">
-
-                                <a href="@($"hotel/room-details/{room.Id}")" class="btn btn-success btn-block">Book</a>
+                                    @if (room.IsBooked)
+                                    {
+                                        <button disabled class="btn btn-secondary btn-block"> 
+                                            Sold Out
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <a href="@($"hotel/room-details/{room.Id}")" class="btn btn-success btn-block">Book</a>
+                                    }
 
                             </div>
                         </div>
@@ -125,7 +133,7 @@ else{
 
 @code {
     private HomeVm HomeModel { get; set; } = new HomeVm();
-    public IEnumerable<HotelRoomClient> Rooms { get; set; } = new List<HotelRoomClient>();
+    public IEnumerable<Model.HotelRoomClient> Rooms { get; set; } = new List<global::HiddenVilla_Client.Model.HotelRoomClient>();
     [Inject] 
     protected Sotsera.Blazor.Toaster.IToaster toast { get; set; }
 
@@ -157,8 +165,7 @@ else{
     //LOADS AVAILABLE ROOMS USING SERVICE
     private async Task LoadRooms()
     {
-        Rooms = await _hotelRoomService.GetHotelRooms(
-            HomeModel.StartDate.ToString("MM/dd/yyyy"),HomeModel.StartDate.ToString("MM/dd/yyyy")
+        Rooms = await _hotelRoomService.GetHotelRooms(HomeModel.StartDate.ToString("MM/dd/yyyy"),HomeModel.StartDate.ToString("MM/dd/yyyy")
         );
 
         foreach(var room in Rooms)

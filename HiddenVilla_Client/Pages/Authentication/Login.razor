@@ -1,0 +1,113 @@
+﻿@page "/login"
+@using HiddenVilla_Client.Model.api_models
+@using System.Web
+@inject IAuthenticationService authenticationService
+@inject NavigationManager navi
+
+<EditForm Model="userForAuthentication" OnValidSubmit="LoginMyUser" class="pt-4">
+    <DataAnnotationsValidator />
+    <div class="py-4">
+        <div class=" row form-group ">
+            <div class="col-6 offset-3 ">
+                <div class="card border">
+                    <div class="card-body px-lg-5 pt-4">
+                        <h3 class="col-12 text-success text-center py-2">
+                            <strong>Sign In</strong>
+                        </h3>
+                        @if (showError)
+                        {
+                            <div>
+                              <p class="text-danger text-center"> @LoginError </p> 
+                            </div>
+                        }
+                        <hr style="background-color:aliceblue" />
+
+                        <div class="py-2">
+                            <InputText @bind-Value="userForAuthentication.UserName" class="form-control" placeholder="Email..." />
+                            <ValidationMessage For="(()=>userForAuthentication.UserName)" />
+                        </div>
+                      
+                        <div class="form-row py-2">
+                            <div class="col">
+                                <InputText @bind-Value="userForAuthentication.Password" type="password" id="password" placeholder="Password..." class="form-control" />
+                                <ValidationMessage For="(()=>userForAuthentication.Password)" />
+                            </div>
+                       
+
+                        </div>
+                        <hr style="background-color:aliceblue" />
+                        <div class="py-2">
+                            @if (isProcessing)
+                            {
+                                <button type="submit" class="btn btn-success btn-block">
+                                    <i class="fas fa-user-plus"></i> 
+                                    Loading....
+                                </button>
+                            }
+                            else
+                            {
+                                 <button type="submit" class="btn btn-success btn-block">
+                                <i class="fas fa-user-plus"></i> 
+                                Login
+                                </button>  
+                            }
+                         
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</EditForm>
+
+
+
+
+
+@code {
+    public AuthenticationDTO userForAuthentication = new AuthenticationDTO();
+    private bool isProcessing { get; set; } = false;
+    public string LoginError { get; set; }
+    public bool showError { get; set; }
+    public string ReturnUrl { get; set; }
+
+
+
+    private async Task LoginMyUser()
+    {
+        showError = false;
+        isProcessing = true;
+        var user = await authenticationService.Login(userForAuthentication);
+
+        if (user.IsAuthSuccessful)
+        {
+            isProcessing = false;
+
+            var absoluteUri = new Uri(navi.Uri);
+            var query = HttpUtility.ParseQueryString(absoluteUri.Query);
+            ReturnUrl = query["returnUrl"];
+
+            if (string.IsNullOrEmpty(ReturnUrl))
+            {
+                navi.NavigateTo("/");
+            }
+            else
+            {
+                navi.NavigateTo("/" + ReturnUrl);
+            }
+
+        }
+        else
+        {
+            isProcessing = false;
+            LoginError = user.Errors;
+            showError = true;
+        }
+
+    }
+}

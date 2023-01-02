@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HiddenVillaServer.Migrations
 {
     [DbContext(typeof(VillaDbContext))]
-    [Migration("20221217050040_roomDetailsToDb5")]
-    partial class roomDetailsToDb5
+    [Migration("20221226193854_Isbooked")]
+    partial class Isbooked
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,14 +49,14 @@ namespace HiddenVillaServer.Migrations
             modelBuilder.Entity("HiddenVilla_Client.Model.HotelRoomClient", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Details")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsBooked")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -91,7 +91,7 @@ namespace HiddenVillaServer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("HotelRoomDTOId")
+                    b.Property<int?>("HotelRoomClientId")
                         .HasColumnType("int");
 
                     b.Property<string>("Uri")
@@ -100,7 +100,7 @@ namespace HiddenVillaServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HotelRoomDTOId");
+                    b.HasIndex("HotelRoomClientId");
 
                     b.ToTable("ImageURI");
                 });
@@ -134,7 +134,6 @@ namespace HiddenVillaServer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrderStatus")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoomId")
@@ -144,19 +143,22 @@ namespace HiddenVillaServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("TotalCost")
-                        .HasColumnType("bigint");
+                    b.Property<double>("TotalCost")
+                        .HasColumnType("float");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("hotelRoomDTOId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("isPaymentSuccessful")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("hotelRoomDTOId");
 
                     b.ToTable("RoomOrderingDetails");
                 });
@@ -474,16 +476,14 @@ namespace HiddenVillaServer.Migrations
                 {
                     b.HasOne("HiddenVilla_Client.Model.HotelRoomClient", null)
                         .WithMany("ImageUrls")
-                        .HasForeignKey("HotelRoomDTOId");
+                        .HasForeignKey("HotelRoomClientId");
                 });
 
             modelBuilder.Entity("HiddenVilla_Client.Model.RoomOrderDetails", b =>
                 {
                     b.HasOne("HiddenVilla_Client.Model.HotelRoomClient", "hotelRoomDTO")
                         .WithMany()
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("hotelRoomDTOId");
 
                     b.Navigation("hotelRoomDTO");
                 });

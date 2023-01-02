@@ -1,4 +1,5 @@
-﻿namespace HiddenVilla_Web_Api
+﻿
+namespace HiddenVilla_Web_Api
 {
     public class ErroModel
     {

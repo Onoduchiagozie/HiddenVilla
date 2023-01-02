@@ -15,8 +15,10 @@ public class HotelRoomService:IHotelRoomService
     {
         var response =
             await _httpClient.GetAsync($"api/HotelRoom?CheckinDate={CheckinDate}&CheckoutDate={CheckoutDate}");
-        var content = await response.Content.ReadAsStringAsync();
-        var rooms = JsonConvert.DeserializeObject<IEnumerable<HotelRoomClient>>(content);
+        var content =
+            await response.Content.ReadAsStringAsync();
+        var rooms = 
+            JsonConvert.DeserializeObject<IEnumerable<HotelRoomClient>>(content);
         return rooms;
     }
 

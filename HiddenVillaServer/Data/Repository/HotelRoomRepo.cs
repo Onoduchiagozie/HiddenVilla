@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HiddenVilla_Client.Pages.HotelRooms;
 using HiddenVillaServer.Data.Repository.IRepository;
 using HiddenVillaServer.Model;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,39 @@ namespace HiddenVillaServer.Data.Repository
             return _mapper.Map<HotelRoom,HotelRoomDTO>(addedRoom.Entity);
 
         }
-        
+
+        public async Task<bool> IsRoomBooked(int roomId, string checkindatestr, string checkoutdatestr)
+        {
+            try
+            {
+                if(!string.IsNullOrEmpty(checkoutdatestr) && !string.IsNullOrEmpty(checkindatestr))
+                {
+                    var checkindate = DateTime.ParseExact(checkindatestr,"MM/dd/yyyy",null);
+                    var checkoutdate = DateTime.ParseExact(checkoutdatestr,"MM/dd/yyyy", null);
+
+                    var existingBooking = await _db.RoomOrderingDetails.Where(
+                       x => x.RoomId == roomId && x.isPaymentSuccessful &&
+                       ((checkindate < x.CheckOutDate && checkindate.Date >= x.CheckInDate)
+                       || (checkoutdate.Date > x.CheckInDate.Date && checkindate.Date <= x.CheckInDate.Date)))
+                        .FirstOrDefaultAsync();
+
+                    if (existingBooking != null)
+                    {
+                        return true;
+                    }
+                    return false;
+
+                }return true;
+            }catch(Exception ex)
+            {
+                throw ex;
+            }
+              
+
+
+        }
+
+
         public async Task<int> DeleteHotel(int roomId)
         {
             var roomDetails = await _db.HotelRooms.FindAsync(roomId);
@@ -53,8 +86,15 @@ namespace HiddenVillaServer.Data.Repository
             {
                 IEnumerable<HotelRoomDTO> hotelRoomDTOs =
                     _mapper.Map<IEnumerable<HotelRoom>, IEnumerable<HotelRoomDTO>>(
-                        _db.HotelRooms.Include(x=>x.HotelImages)
-                        );
+                        _db.HotelRooms.Include(x => x.HotelImages));
+
+                if (!string.IsNullOrEmpty(CheckoutDatestr) && !string.IsNullOrEmpty(checkinDatestr))
+                {
+                    foreach(HotelRoomDTO hotelRoom in hotelRoomDTOs)
+                    {
+                        hotelRoom.IsBooked = await IsRoomBooked(hotelRoom.Id, checkinDatestr, CheckoutDatestr);
+                    }
+                }
                 return hotelRoomDTOs;
                     
             }
@@ -68,9 +108,15 @@ namespace HiddenVillaServer.Data.Repository
         {
             try
             {
-                HotelRoomDTO hotelRoom= _mapper.Map<HotelRoom,HotelRoomDTO>(await _db.HotelRooms.Include(x=>x.HotelImages)
+
+                HotelRoomDTO hotelRoom = _mapper.Map<HotelRoom, HotelRoomDTO>(await _db.HotelRooms.Include(x => x.HotelImages)
                         .FirstOrDefaultAsync(x => x.Id == roomId)
                     );
+
+                if (!string.IsNullOrEmpty(CheckoutDatestr) && !string.IsNullOrEmpty(checkinDatestr))
+                {
+                    hotelRoom.IsBooked = await IsRoomBooked(roomId, checkinDatestr, CheckoutDatestr);
+                }
                 return hotelRoom;
 
             }

@@ -15,17 +15,16 @@ namespace HiddenVillaServer.Data.Repository
         {
             try
             {
-                details.CheckInDate = details.CheckInDate.Date;
-                details.CheckOutDate= details.CheckOutDate.Date;
                 var roomOrder = details;
                 roomOrder.OrderStatus = "Status Pending";
                 var result=await _db.RoomOrderingDetails.AddAsync(roomOrder);
+
                 await _db.SaveChangesAsync();
                 return result.Entity;
             }
             catch (Exception ex) 
             {
-                return null;
+                throw ex;
             }
 
         }
@@ -66,26 +65,24 @@ namespace HiddenVillaServer.Data.Repository
 
 
 
-        public async Task<bool> IsRoomBooked(int roomId, DateTime checkindate, DateTime checkoutdate)
-        {
-           var status = false;
-            var existingBooking = await _db.RoomOrderingDetails.Where(
-                x => x.RoomId == roomId && x.isPaymentSuccessful &&
-                (checkindate < x.CheckOutDate && checkindate.Date > x.CheckInDate
-                || checkoutdate.Date > x.CheckInDate.Date && checkindate.Date < x.CheckInDate.Date)).FirstOrDefaultAsync();
 
-            if (existingBooking != null)
+
+        public async Task<RoomOrderDetails> PayMentSuccessful(int id)
+        {
+             
+            var dataDb= await _db.RoomOrderingDetails.FindAsync(id);
+            if(dataDb == null)
             {
-                status = true;
+                return null;
             }
-            return status;
-
-                                                                   
-        }
-
-        public Task<RoomOrderDetails> PayMentSuccessful(int id)
-        {
-            throw new NotImplementedException();
+            if (!dataDb.isPaymentSuccessful)
+            {
+                dataDb.isPaymentSuccessful = true;
+                dataDb.OrderStatus = "Booked";
+                var markPaySucess = _db.RoomOrderingDetails.Update(dataDb);
+                await _db.SaveChangesAsync();
+                return markPaySucess.Entity;
+            }return new RoomOrderDetails();
         }
 
         public Task<bool> UpdateOrderStatus(int roomOrderId, string status)
