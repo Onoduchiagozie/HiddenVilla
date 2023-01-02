@@ -14,7 +14,7 @@ namespace HiddenVillaServer.Data
         public VillaDbContext (DbContextOptions<VillaDbContext> options) : base(options)
         {
         }
-       public DbSet<Model.HotelRoom> HotelRooms { get; set; }
+       public DbSet<HotelRoom> HotelRooms { get; set; }
        public DbSet<HotelImage> HotelImages { get; set; }
        public DbSet<HotelAmenity> HotelAmmenities { get; set; }
        public DbSet<RoomOrderDetails> RoomOrderingDetails { get; set; }
