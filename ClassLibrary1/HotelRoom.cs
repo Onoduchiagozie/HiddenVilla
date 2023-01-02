@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using HiddenVillaServer.Model.MetaData;
 
-namespace HiddenVillaServer.Model
+namespace ClassLibrary1
 {
     public class HotelRoom
     {
@@ -19,6 +18,5 @@ namespace HiddenVillaServer.Model
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public string UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; }
-        public virtual ICollection<HotelImage> HotelImages { get; set; }
     }
 }
