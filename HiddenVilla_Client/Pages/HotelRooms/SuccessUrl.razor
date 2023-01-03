@@ -1,6 +1,9 @@
 ﻿@page "/success-payment"
 @inject Blazored.LocalStorage.ILocalStorageService _localStorage;
 @inject IRoomOrderDetailsClient _roomOrder
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize(Roles = "Customer")]
 
 <div class="container">
     @if (!isPaymentComplete)

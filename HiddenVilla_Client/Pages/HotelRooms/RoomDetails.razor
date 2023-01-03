@@ -4,7 +4,9 @@
 @inject IStripePaymentService _stripe
 @inject IRoomOrderDetailsClient _roomorder
 @inject IJSRuntime _jsRuntime
+@using Microsoft.AspNetCore.Authorization
 <ToastContainer />
+@attribute [Authorize(Roles = "Customer")]
 @if(HotelRoomOrderVm?.OrderDetails?.hotelRoomDTO?.Occupancy == null)
 {
     <div class="spinner"></div>
