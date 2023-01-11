@@ -18,7 +18,7 @@ namespace HiddenVilla_Client.Service
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var token = await _local.GetItemAsync<string>("jwt token");
+            var token = await _local.GetItemAsync<string>("jwt_token");
             if(token == null)
             {
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));

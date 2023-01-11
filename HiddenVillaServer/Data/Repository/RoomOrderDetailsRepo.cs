@@ -1,6 +1,7 @@
 ﻿using HiddenVilla_Client.Model;
 using HiddenVillaServer.Data.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace HiddenVillaServer.Data.Repository
 {
@@ -16,7 +17,7 @@ namespace HiddenVillaServer.Data.Repository
             try
             {
                 var roomOrder = details;
-                roomOrder.OrderStatus = "Status Pending";
+                roomOrder.OrderStatus = "Pending";
                 var result=await _db.RoomOrderingDetails.AddAsync(roomOrder);
 
                 await _db.SaveChangesAsync();
@@ -34,7 +35,7 @@ namespace HiddenVillaServer.Data.Repository
             try
             {
                 IEnumerable<RoomOrderDetails> roomOrderDetails =
-                    _db.RoomOrderingDetails.Include(u => u.hotelRoomDTO);
+                    _db.RoomOrderingDetails;
 
                 return roomOrderDetails;
 
@@ -49,14 +50,9 @@ namespace HiddenVillaServer.Data.Repository
         {
             try
             {
-                RoomOrderDetails roomOrder = await _db.RoomOrderingDetails.Include(u => u.hotelRoomDTO)
-                     .ThenInclude(x => x.HotelImages).FirstOrDefaultAsync(u => u.Id == roomOrderId);
-
-                roomOrder.hotelRoomDTO.TotalDays = roomOrder.CheckOutDate.Subtract(roomOrder.CheckInDate).Days;
-
+                RoomOrderDetails roomOrder = await _db.RoomOrderingDetails.FindAsync(roomOrderId);
                 return roomOrder;
-
-            }
+                }
             catch (Exception ex)
             {
                 return null;
@@ -85,9 +81,32 @@ namespace HiddenVillaServer.Data.Repository
             }return new RoomOrderDetails();
         }
 
-        public Task<bool> UpdateOrderStatus(int roomOrderId, string status)
+        public async Task<bool> UpdateOrderStatus(int roomOrderId, string status)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var roomOrder = await _db.RoomOrderingDetails.FirstOrDefaultAsync(u => u.Id == roomOrderId);
+                if(roomOrder == null)
+                {
+                    return false;
+                }
+                roomOrder.OrderStatus = status;
+                if(status=="Checked In")
+                {
+                    roomOrder.ActualCheckInDate = DateTime.Now;
+                }
+                if (status == "Checked Out") 
+                {
+                    roomOrder.ActualCheckOutDate = DateTime.Now;
+                }
+                await _db.SaveChangesAsync(); 
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
         }
     }
 }

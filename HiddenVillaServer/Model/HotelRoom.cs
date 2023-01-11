@@ -1,6 +1,5 @@
 ﻿using HiddenVillaServer.Model.MetaData;
 using System.ComponentModel.DataAnnotations;
-
 namespace HiddenVillaServer.Model
 {
     public class HotelRoom

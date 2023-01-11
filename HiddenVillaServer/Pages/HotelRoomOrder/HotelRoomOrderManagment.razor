@@ -1,0 +1,235 @@
+﻿@page "/hotel-room-order/details/{Id:int}"
+@inject IRoomOrderDetailsRepo roomRepo
+@inject IHotelImagesRepository imageRepo
+@inject IHotelRoomRepo mainroomrepo
+@using HiddenVilla_Client.Model
+
+@if (IsLoading)
+{
+    <div class="spinner"></div>
+}
+else
+{
+ <div class="mt-4 px-md-1 mx-md-1">
+
+    <div class="row p-2 my-3 bg-dark" style="border-radius:20px; ">
+        <div class="col-6 pt-2 pl-4 text-info">
+            <h2>Booking Details : </h2>
+        </div>
+        <div class="col-6 pt-2 col-md-3 offset-md-3">
+            <a href="/hotel-room-order" class="btn btn-info form-control">Back to Booking</a>
+        </div>
+        <div class="col-12 col-lg-8 p-4">
+            <div class="row px-2 text-success border-bottom">
+                <div class="col-8 py-1"><p style="font-size:x-large;margin:0px;">Selected Room</p></div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-7">
+                    <div id="" class="carousel slide mb-4 m-md-3 m-0 pt-3 pt-md-0" data-ride="carousel">
+                            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                                <ol class="carousel-indicators">
+                                    @{
+                                        int imageIndex = 0;
+                                        int innerImageIndex = 0;
+                                    }
+                                    @foreach (var image in roomManagement.hotelRoom.HotelImages)
+                                    {
+                                        @if (imageIndex == 0)
+                                        {
+                                            <li data-target="#carouselExampleIndicators_@image.Id" data-slide-to="@imageIndex" class="active"></li>
+                                        }
+                                        else
+                                        {
+                                            <li data-target="#carouselExampleIndicators_@image.Id" data-slide-to="@imageIndex"></li>
+                                        }
+                                        imageIndex++;
+                                    }
+                                </ol>
+                                <div class="carousel-inner">
+                                    @foreach (var image in roomManagement.hotelRoom.HotelImages)
+                                    {
+                                        @if (innerImageIndex == 0)
+                                        {
+                                            <div class="carousel-item active">
+                                                <img class="d-block w-100" style="border-radius:20px;" src="@image.ImageUrl" alt="First slide">
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="carousel-item ">
+                                                <img class="d-block w-100" style="border-radius:20px;" src="@image.ImageUrl" alt="First slide">
+                                            </div>
+                                        }
+                                        innerImageIndex++;
+                                    }
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        </div>
+                </div>
+                <div class="col-5">
+                        <span class="float-right pt-4 text-white-50">
+                             <span class="float-right">Max Occupancy : @roomManagement.hotelRoom.Occupancy adults </span><br />
+                            <span class="float-right pt-1">Villa Size : @roomManagement.hotelRoom.SqFt sqft</span><br />
+                            <span class="float-right pt-1">Cost for @TotalDays nights</span><br />
+                            <h4 class="text-warning font-weight-bold pt-5 float-right">
+                                <span style="border-bottom:1px solid #ff6a00"> 
+                                    @roomManagement.orderDetails.TotalCost.ToString("c")
+                                </span>
+                            </h4>
+
+                    </span>
+                </div>
+            </div>
+            <div class="row p-2">
+                <div class="col-12">
+                        <p class="card-title text-warning" style="font-size:xx-large">@roomManagement.hotelRoom.Name</p>
+                        <p class="card-text text-warning" style="font-size:large">
+                            @roomManagement.hotelRoom.Details
+                    </p>
+                </div>
+
+            </div>
+            <div class="row p-2">
+                    @if (roomManagement.orderDetails.OrderStatus == "Booked" || roomManagement.orderDetails.OrderStatus == "Status Pending" || roomManagement.orderDetails.OrderStatus == "Pending")
+                    {
+                        <div class="col-3">
+                    <button @onclick="CancelBooking" class="btn btn-danger form-control">Cancel Booking </button>
+                </div> 
+                    }
+                    @if (roomManagement.orderDetails.OrderStatus == "Booked")
+                    {
+                          <div class="col-3 offset-1">
+                            <button @onclick="NoShowBooking" class="btn btn-warning form-control">No Show </button>
+                </div>   
+                    }
+
+               
+
+
+           
+
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4 p-4 2 mt-4 mt-md-0">
+            <div class="row px-2 text-success border-bottom"><div class="col-7 py-1"><p style="font-size:x-large;margin:0px;">Enter Details</p></div></div>
+            <div class="form-group pt-2">
+                <label class="text-warning">Booking Status</label>
+                    <input @bind-value="roomManagement.orderDetails.OrderStatus"  type="text" disabled class="form-control" />
+            </div>
+            <div class="form-group pt-2">
+                <label class="text-warning">Name</label>
+                    <input @bind-value="roomManagement.orderDetails.Name" type="text" disabled class="form-control" />
+            </div>
+        
+            <div class="form-group">
+                <label class="text-warning">Email</label>
+                    <input @bind-value="roomManagement.orderDetails.Email" type="text" disabled class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="text-warning">Check in Date</label>
+                    <input type="text" disabled value="@roomManagement.orderDetails.CheckInDate.ToShortDateString()" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label class="text-warning">Check out Date</label>
+                    <input type="text" disabled value="@roomManagement.orderDetails.CheckOutDate.ToShortDateString()" class="form-control" />
+            </div>
+                @if (roomManagement.orderDetails.OrderStatus == "Checked In" || roomManagement.orderDetails.OrderStatus=="Checked Out")
+                {
+                       <div class="form-group">
+                <label class="text-warning">Actual Check In Date</label>
+                    <input type="text" disabled value="@roomManagement.orderDetails.ActualCheckInDate.ToShortDateString()" class="form-control" />
+            </div>  
+                }
+
+
+                @if(roomManagement.orderDetails.OrderStatus == "Checked Out")
+                {
+            <div class="form-group">
+                <label class="text-warning">Actual Check Out Date</label>
+                    <input type="text" disabled value="@roomManagement.orderDetails.ActualCheckOutDate.ToShortDateString()" class="form-control" />
+            </div>
+                }
+
+            <div class="form-group">
+                    @if (roomManagement.orderDetails.OrderStatus == "Booked")
+                    {
+                        <button @onclick="ConfirmCheckin" class="btn btn-success">Confirm Check In</button>
+
+                    }
+
+                    @if (roomManagement.orderDetails.OrderStatus == "Checked In")
+                    {
+                        <button @onclick="ConfirmCheckOut" class="btn btn-success">Confirm Check Out</button>
+
+                    }
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+</div>
+ 
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public int TotalDays { get; set; }
+    private bool IsLoading { get; set; } = false;
+    private RoomManagement roomManagement { get; set; } = new RoomManagement();
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+
+        if(Id != 0)
+        {
+            roomManagement.orderDetails = await roomRepo.GetRoomOrderDetail(Id);
+            roomManagement.hotelRoom = await mainroomrepo.GetHotelRoom(roomManagement.orderDetails.RoomId);
+            TotalDays = roomManagement.orderDetails.CheckOutDate.Subtract(roomManagement.orderDetails.CheckInDate).Days;
+        }
+        else
+        {
+            Console.WriteLine("QWERTYUIOPASDFGHJKLZXCVBNM");
+        }
+
+        IsLoading = false;
+    }
+
+    private async Task ConfirmCheckin()
+    {
+        await roomRepo.UpdateOrderStatus(roomManagement.orderDetails.Id, "Checked In");
+        roomManagement.orderDetails = await roomRepo.GetRoomOrderDetail(Id);
+    }
+    private async Task ConfirmCheckOut()
+    {
+        await roomRepo.UpdateOrderStatus(roomManagement.orderDetails.Id, "Checked Out");
+        roomManagement.orderDetails = await roomRepo.GetRoomOrderDetail(Id);
+    }
+
+    private async Task CancelBooking()
+    {
+        await roomRepo.UpdateOrderStatus(roomManagement.orderDetails.Id, "Cancel Booking");
+        roomManagement.orderDetails = await roomRepo.GetRoomOrderDetail(Id);
+    }
+    private async Task NoShowBooking()
+    {
+        await roomRepo.UpdateOrderStatus(roomManagement.orderDetails.Id, "No Show");
+        roomManagement.orderDetails = await roomRepo.GetRoomOrderDetail(Id);
+    }
+}

@@ -25,7 +25,7 @@ namespace HiddenVilla_Client.Model
         public string Name { get; set; }
         [Required]
         public string Email { get; set; }
-
+        
         public HotelRoomClient? hotelRoomDTO { get; set; }
         public string? OrderStatus { get; set; }
 

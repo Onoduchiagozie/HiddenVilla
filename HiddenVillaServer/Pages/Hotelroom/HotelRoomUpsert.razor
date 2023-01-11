@@ -45,6 +45,8 @@
                 </div>
                 <div class="form-group">
                     <InputFile OnChange="HandleImageUpload" multiple></InputFile>
+                    <ValidationMessage For="()=>HotelRoomModel.HotelImages"></ValidationMessage>
+
                     <div class="row">
                         @if (HotelRoomModel.ImageUrls !=null && HotelRoomModel.ImageUrls.Count() > 0)
                         {

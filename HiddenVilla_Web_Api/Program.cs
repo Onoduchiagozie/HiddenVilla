@@ -32,7 +32,9 @@ builder.Services.AddDbContext<VillaDbContext>(options =>
                         options.UseSqlServer(builder.Configuration
                         .GetConnectionString("DefaultConnection"))
                         );
-builder.Services.AddIdentity<IdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<VillaDbContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(
+    options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<VillaDbContext>();
 // builder.Services.AddDefaultIdentity<ApplicationUser>
 //         (options => options.SignIn.RequireConfirmedAccount = true)
 //     .AddRoles<IdentityRole>()
@@ -51,8 +53,15 @@ builder.Services.AddRouting(options=>options.LowercaseUrls=true);
 var appSettingSection = builder.Configuration.GetSection("APISettings");
 builder.Services.Configure<APISettings>(appSettingSection);
 
+builder.Services.Configure<APISettings>(builder.Configuration.GetSection("MailJet"));
+
 var apiSettings = appSettingSection.Get<APISettings>();
 var key = Encoding.ASCII.GetBytes(apiSettings.SecretKey);
+
+
+        
+
+
 builder.Services.AddAuthentication(opt =>
     {
         opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -61,6 +70,15 @@ builder.Services.AddAuthentication(opt =>
     }
 ).AddJwtBearer(x =>
 {
+    x.Events = new JwtBearerEvents()
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Cookies["access_token"];
+            return Task.CompletedTask;
+        }
+    };
+
     x.RequireHttpsMetadata = false;
     x.SaveToken = true;
     x.TokenValidationParameters = new TokenValidationParameters()

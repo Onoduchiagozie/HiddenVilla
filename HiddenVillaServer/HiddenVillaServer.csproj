@@ -31,6 +31,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
+    <PackageReference Include="Radzen.Blazor" Version="4.4.8" />
     <PackageReference Include="Sotsera.Blazor.Toaster" Version="3.0.0" />
   </ItemGroup>
 

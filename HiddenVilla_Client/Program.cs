@@ -18,14 +18,16 @@ builder.Services.AddToaster(config =>
     config.PreventDuplicates = true;
     config.NewestOnTop = false;
 });
-builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<IHotelRoomService, HotelRoomService>();
 builder.Services.AddScoped<IAmenityService, AmenityService>();
 builder.Services.AddScoped<IRoomOrderDetailsClient, RoomOrderDetailsClient>();
 builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
-builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+builder.Services.AddScoped<AuthStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<AuthStateProvider>());
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped(sp => new HttpClient {BaseAddress = new Uri(builder.Configuration.GetValue<string>("BaseAPIUrl")) }
                            );
+builder.Services.AddAuthorizationCore();
+
 builder.Services.AddBlazoredLocalStorage();
 await builder.Build().RunAsync();

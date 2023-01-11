@@ -1,4 +1,5 @@
 ﻿using HiddenVilla_Client.Model;
+using HiddenVilla_Web_Api.Helper;
 using HiddenVillaServer.Data.Repository.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +49,9 @@ namespace HiddenVilla_Web_Api.Controllers
                 if(request == null)
                 {
                     return BadRequest(new ErroModel(){ErrorMessage="Repo Service Could Not Mark Payment As Successfull"});
-                }return Ok(request);
+                }
+                EmailSender.Sender(details);
+                return Ok(request);
 
             }
             else

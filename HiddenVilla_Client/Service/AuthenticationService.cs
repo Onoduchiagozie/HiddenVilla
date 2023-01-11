@@ -35,7 +35,7 @@ namespace HiddenVilla_Client.Service
 
             if (response.IsSuccessStatusCode)
             {
-                await _localStorageService.SetItemAsync("Local_Token",result.Token);
+                await _localStorageService.SetItemAsync("jwt_token",result.Token);
                 await _localStorageService.SetItemAsync("User_Details",result.UserDto);
                 ((AuthStateProvider)_authStateProvider).NotifyUserLoggedIn(result.Token);
 
@@ -53,7 +53,7 @@ namespace HiddenVilla_Client.Service
 
         public async Task Logout()
         {
-            await _localStorageService.RemoveItemAsync("Local_Token");
+            await _localStorageService.RemoveItemAsync("jwt_token");
             await _localStorageService.RemoveItemAsync("User_Details");
             ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
             _httpClient.DefaultRequestHeaders.Authorization = null;
