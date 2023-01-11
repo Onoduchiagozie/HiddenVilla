@@ -1,0 +1,23 @@
+﻿@inject NavigationManager navi
+
+<h3>Redirecting To Login</h3>
+
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState>  authenticationState { get; set; }
+
+
+    protected override Task OnInitializedAsync()
+    {
+        var returnUrl = navi.ToBaseRelativePath(navi.Uri);
+        if (string.IsNullOrEmpty(returnUrl))
+        {
+            navi.NavigateTo("/",true);
+        }
+        else
+        {
+            navi.NavigateTo($"/login?returnUrl={returnUrl}", true);
+        }
+        return base.OnInitializedAsync();
+    }
+}
